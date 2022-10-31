@@ -1,11 +1,14 @@
 import { View, Text, Image,StyleSheet,FlatList,TouchableOpacity } from 'react-native'
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
+import {useDispatch} from 'react-redux'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addCart } from '../Redux/Slices/CartSlice';
 
 
 const Product = (props) => {
+  const dispatch=useDispatch();
   const [products,setProducts]=useState([]);
   useEffect(()=>
   {
@@ -19,19 +22,20 @@ const Product = (props) => {
   },[])
   async function add(item)
   {
-    var arr=await AsyncStorage.getItem("cart");
-    if(!arr)
-    {
-      var arr=[];
-      arr.push(item);
-      await AsyncStorage.setItem("cart",JSON.stringify(arr));
-    }
-    else
-    {
-      arr=JSON.parse(arr);
-      arr.push(item);
-      await AsyncStorage.setItem("cart",JSON.stringify(arr));
-      }
+    // var arr=await AsyncStorage.getItem("cart");
+    // if(!arr)
+    // {
+    //   var arr=[];
+    //   arr.push(item);
+    //   await AsyncStorage.setItem("cart",JSON.stringify(arr));
+    // }
+    // else
+    // {
+    //   arr=JSON.parse(arr);
+    //   arr.push(item);
+    //   await AsyncStorage.setItem("cart",JSON.stringify(arr));
+    //   }
+    dispatch(addCart({...item,qunatity:1}));
     }
   return (
     <View style={styles.container}>
@@ -54,7 +58,7 @@ const Product = (props) => {
         </View>
         <View style={{flexDirection:'row',justifyContent:"space-around",alignItems:'center',height:70}}>
         <Text style={{fontSize:25,fontWeight:"bold",color:"#330033"}}>{item.price}</Text>
-        <TouchableOpacity onPress={()=>add(item)}><Ionicons name="add-circle" color="#330033" size={30}/></TouchableOpacity>
+        <TouchableOpacity onPress={()=>add(item)}><Ionicons name="heart-outline" color="red" size={30}/></TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>}
